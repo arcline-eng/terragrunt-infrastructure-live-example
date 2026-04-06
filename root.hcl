@@ -72,3 +72,25 @@ inputs = merge(
   local.region_vars.locals,
   local.environment_vars.locals,
 )
+
+# ---------------------------------------------------------------------------------------------------------------------
+# PIN PROVIDER VERSIONS
+# Generate a versions.tf file to pin provider versions and prevent unexpected breaking changes.
+# ---------------------------------------------------------------------------------------------------------------------
+
+generate "versions" {
+  path      = "versions.tf"
+  if_exists = "overwrite_terragrunt"
+  contents  = <<VERSIONS
+terraform {
+  required_version = ">= 1.5.0, < 2.0.0"
+
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }
+  }
+}
+VERSIONS
+}
